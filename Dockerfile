@@ -4,6 +4,9 @@ RUN apt-get update && apt-get install -y \
     libzip-dev zip unzip \
     && docker-php-ext-install pdo pdo_mysql
 
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs
+
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 WORKDIR /var/www/html
@@ -21,3 +24,9 @@ RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /e
 RUN echo "<Directory /var/www/html/public> \n\
     AllowOverride All \n\
     </Directory>" >> /etc/apache2/apache2.conf
+
+RUN npm install
+
+EXPOSE 80
+
+CMD ["apache2-foreground"]
